@@ -1,4 +1,4 @@
-Nome do Produto,Preço;
-Produto A,10.06;
-Produto B,15.06;
-Produto C,25.06;
+Nome do Produto,PreÃ§o,0;
+Produto A,10.06,0;
+Produto B,15.06,0;
+Produto C,25.06,0;
