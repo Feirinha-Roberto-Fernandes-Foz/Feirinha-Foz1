@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feirinha Foz</title>
+    <title>Feirinha Morenitas</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -124,7 +124,6 @@
 <body>
     <!-- Tela 1: Mapa com ícones - MANTIDO INTACTO -->
     <div id="map-screen">
-        <h1>Feirinha Morenitas - Lojas</h1>
         
         <div class="relative max-w-4xl mx-auto mb-8">
             <img src="https://github.com/Feirinha-Roberto-Fernandes-Foz/Feirinha-Foz1/blob/main/rua.png?raw=true" 
