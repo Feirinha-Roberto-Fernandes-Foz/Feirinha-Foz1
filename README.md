@@ -1,2 +1,316 @@
-# Feirinha-Foz1
-Feirinha Foz 
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feirinha Foz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        /* Estilo do mapa - MANTIDO COMO ESTAVA */
+        .relative {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .map-image {
+            width: 100%;
+            max-width: 700px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .store-icon {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #1e88e5;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+        
+        .store-icon:hover {
+            transform: scale(1.1);
+            background-color: #0d47a1;
+        }
+        
+        /* Telas agora são sobrepostas (como modal) */
+        .screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 100;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .store-image, .product-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px;
+            border-radius: 8px;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .product-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: white;
+        }
+        
+        .product-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .order-form {
+            max-width: 500px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        button {
+            background-color: #1e88e5;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .back-button {
+            background-color: #757575;
+        }
+    </style>
+</head>
+<body>
+    <!-- Tela 1: Mapa com ícones - MANTIDO INTACTO -->
+    <div id="map-screen">
+        <h1>Feirinha Foz - Lojas</h1>
+        
+        <div class="relative max-w-4xl mx-auto mb-8">
+            <img src="https://github.com/Feirinha-Roberto-Fernandes-Foz/Feirinha-Foz1/blob/main/rua.png?raw=true" 
+                 alt="Mapa da Feira" 
+                 class="map-image">
+            
+            <!-- Ícones das Lojas - MANTIDO EXATAMENTE COMO VOCÊ DEFINIU -->
+            <div class="store-icon" onclick="showStore(1)" style="top: 30%; left: 19%;">1</div>
+            <div class="store-icon" onclick="showStore(2)" style="top: 30%; left: 35%;">2</div>
+            <div class="store-icon" onclick="showStore(3)" style="top: 30%; left: 52%;">3</div>
+            <div class="store-icon" onclick="showStore(4)" style="top: 30%; left: 68%;">4</div>
+            <div class="store-icon" onclick="showStore(5)" style="top: 30%; left: 87%;">5</div>
+            <div class="store-icon" onclick="showStore(6)" style="top: 60%; left: 19%;">6</div>
+            <div class="store-icon" onclick="showStore(7)" style="top: 60%; left: 35%;">7</div>
+            <div class="store-icon" onclick="showStore(8)" style="top: 60%; left: 52%;">8</div>
+            <div class="store-icon" onclick="showStore(9)" style="top: 60%; left: 68%;">9</div>
+            <div class="store-icon" onclick="showStore(10)" style="top: 60%; left: 87%;">10</div>
+        </div>
+    </div>
+    
+    <!-- Tela 2: Loja selecionada (NOVA TELA) -->
+    <div id="store-screen" class="screen">
+        <button onclick="backToMap()" class="back-button">Voltar ao Mapa</button>
+        <h2>Loja <span id="store-number"></span></h2>
+        
+        <img id="store-image" class="store-image" src="" alt="Foto da Loja">
+        
+        <h3>Produtos Disponíveis:</h3>
+        <div id="product-list" class="product-list">
+            <!-- Produtos serão carregados aqui -->
+        </div>
+    </div>
+    
+    <!-- Tela 3: Produto selecionado (NOVA TELA) -->
+    <div id="product-screen" class="screen">
+        <button onclick="backToStore()" class="back-button">Voltar para Loja</button>
+        <h2 id="product-title"></h2>
+        
+        <img id="product-image" class="product-image" src="" alt="Foto do Produto">
+        
+        <div class="order-form">
+            <div class="form-group">
+                <label for="quantity">Quantidade:</label>
+                <input type="number" id="quantity" min="1" value="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="size">Tamanho:</label>
+                <select id="size">
+                    <option value="Pequeno">Pequeno</option>
+                    <option value="Médio">Médio</option>
+                    <option value="Grande">Grande</option>
+                   <option value="Não se Aplica">Nao se Aplica</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="accept"> Aceito os termos
+                </label>
+            </div>
+            
+            <button onclick="submitOrder()">Enviar Pedido</button>
+        </div>
+    </div>
+
+    <script>
+        // Dados das lojas e produtos
+        let currentStore = null;
+        let currentProduct = null;
+        let storeProducts = {};
+        
+        // Função para carregar produtos de uma loja
+        async function loadStoreProducts(storeNumber) {
+            try {
+                const url = `https://raw.githubusercontent.com/Feirinha-Roberto-Fernandes-Foz/Feirinha-Foz1/d83ed41c30a4ea0d12f8ab317ea9eca99744a44e/preco_loja${storeNumber}.csv`;
+                const response = await fetch(url);
+                const csvData = await response.text();
+                
+                // Processar CSV
+                const lines = csvData.split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                const products = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i]) continue;
+                    
+                    const values = lines[i].split(',');
+                    const product = {};
+                    
+                    for (let j = 0; j < headers.length; j++) {
+                        product[headers[j]] = values[j] ? values[j].trim() : '';
+                    }
+                    
+                    // Criar link da imagem do produto (baseado no padrão dos arquivos)
+                    const productImageUrl = `https://raw.githubusercontent.com/Feirinha-Roberto-Fernandes-Foz/Feirinha-Foz1/f91b0c1f29de007416b2569f291eee479806b600/produto${i}-loja${storeNumber}.png`;
+                    
+                    products.push({
+                        id: i,
+                        name: product.Produto || product.produto || `Produto ${i}`,
+                        price: parseFloat(product['Preço'] || product.preço || product.Preco || product.preco || 0),
+                        image: productImageUrl
+                    });
+                }
+                
+                return products;
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                return [];
+            }
+        }
+        
+        // Mostrar tela da loja
+        async function showStore(storeNumber) {
+            currentStore = storeNumber;
+            
+            // Carregar dados da loja
+            document.getElementById('store-number').textContent = storeNumber;
+            document.getElementById('store-image').src = `https://raw.githubusercontent.com/Feirinha-Roberto-Fernandes-Foz/Feirinha-Foz1/f91b0c1f29de007416b2569f291eee479806b600/loja${storeNumber}.png`;
+            
+            // Carregar produtos
+            if (!storeProducts[storeNumber]) {
+                storeProducts[storeNumber] = await loadStoreProducts(storeNumber);
+            }
+            
+            // Exibir produtos
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = '';
+            
+            storeProducts[storeNumber].forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/150?text=${encodeURIComponent(product.name)}'">
+                    <h4>${product.name}</h4>
+                    <p>Preço: R$ ${product.price.toFixed(2)}</p>
+                    <button onclick="showProduct(${product.id})">Selecionar</button>
+                `;
+                productList.appendChild(productCard);
+            });
+            
+            // Mostrar tela da loja
+            document.getElementById('store-screen').style.display = 'block';
+        }
+        
+        // Mostrar tela do produto
+        function showProduct(productId) {
+            currentProduct = storeProducts[currentStore].find(p => p.id == productId);
+            
+            if (!currentProduct) {
+                alert('Produto não encontrado!');
+                return;
+            }
+            
+            document.getElementById('product-title').textContent = currentProduct.name;
+            document.getElementById('product-image').src = currentProduct.image;
+            
+            // Mostrar tela do produto
+            document.getElementById('product-screen').style.display = 'block';
+        }
+        
+        // Funções de navegação
+        function backToMap() {
+            document.getElementById('store-screen').style.display = 'none';
+        }
+        
+        function backToStore() {
+            document.getElementById('product-screen').style.display = 'none';
+        }
+        
+        function submitOrder() {
+            const quantity = document.getElementById('quantity').value;
+            const size = document.getElementById('size').value;
+            const accept = document.getElementById('accept').checked;
+            
+            if (!accept) {
+                alert('Por favor, aceite os termos para continuar.');
+                return;
+            }
+            
+            alert(`Pedido enviado para Loja ${currentStore}:\n${quantity}x ${currentProduct.name} (${size})\nTotal: R$ ${(currentProduct.price * quantity).toFixed(2)}`);
+            
+            // Voltar para o mapa
+            document.getElementById('product-screen').style.display = 'none';
+            document.getElementById('store-screen').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
